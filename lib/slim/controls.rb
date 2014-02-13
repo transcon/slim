@@ -39,7 +39,7 @@ module Slim
           # The capturing can be disabled with the option :disable_capture.
           # Output code in the block writes directly to the output buffer then.
           # Rails handles this by replacing the output buffer for helpers.
-          options[:disable_capture] ? compile(content) : [:capture, unique_name, compile(content)]],
+          options[:disable_capture] ? [:multi, compile(content), [:code, 'nil']] : [:capture, unique_name, compile(content)]],
 
          # Output the content.
          [:escape, escape, [:dynamic, tmp]]]

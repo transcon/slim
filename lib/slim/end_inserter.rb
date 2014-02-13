@@ -50,7 +50,7 @@ module Slim
 
     # Appends an end
     def append_end(result)
-      result << [:code, 'end']
+      result << [:code, 'nil;end']
     end
 
     # Checks if an expression is a Slim control code
