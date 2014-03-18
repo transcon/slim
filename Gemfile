@@ -42,6 +42,8 @@ gem 'asciidoctor'
 gem 'org-ruby'
 gem 'minitest', '~> 4.7.4'
 
+gem 'redcarpet'
+
 if ENV['TASK'] == 'bench'
   gem 'erubis'
   gem 'haml'

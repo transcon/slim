@@ -13,7 +13,7 @@ require 'haml'
 
 class SlimBenchmarks
   def initialize(slow, iterations)
-    @iterations = (iterations || 1000).to_i
+    @iterations = (iterations || 10000).to_i
     @benches    = []
 
     @erb_code  = File.read(File.dirname(__FILE__) + '/view.erb')

@@ -988,7 +988,7 @@ renders as
 #### Boolean attributes
 
 The attribute values `true`, `false` and `nil` are interpreted as booleans.
-If you use the attribut wrapper you can omit the attribute assigment.
+If you use the attribute wrapper you can omit the attribute assigment.
 
 ~~~ slim
 - true_value1 = ""
