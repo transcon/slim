@@ -356,9 +356,6 @@ module Slim
       when /\A( ?)(.*)\Z/
         # Text content
         tag << [:slim, :text, parse_text_block($2, @orig_line.size - @line.size + $1.size, true)]
-      when /\A( ?)({{.*}})\Z/
-        # Angular content
-        tag << [:slim, :text, parse_text_block($2, @orig_line.size - @line.size + $1.size, true)]
       end
     end
 
@@ -381,6 +378,10 @@ module Slim
           # Splat attribute
           @line = $'
           attributes << [:slim, :splat, parse_ruby_code(delimiter)]
+        when /\A({{.*)/
+          # Angular content
+          @line = $'
+          attributes << [:slim, :text, parse_text_block($1, @orig_line.size - @line.size + $1.size, true)]
         when QUOTED_ATTR_RE
           # Value is quoted (static)
           @line = $'
