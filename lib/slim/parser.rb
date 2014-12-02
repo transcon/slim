@@ -356,7 +356,7 @@ module Slim
       when /\A( ?)(.*)\Z/
         # Text content
         tag << [:slim, :text, parse_text_block($2, @orig_line.size - @line.size + $1.size, true)]
-      when /s*{{.*}}s*/
+      when /{{.*}}/
         # Angular content
         tag << [:slim, :text, parse_text_block($2, @orig_line.size - @line.size + $1.size, true)]
       end
