@@ -314,9 +314,14 @@ module Slim
       trailing_ws = $&.include?('\'') || $&.include?('>')
       leading_ws = $&.include?('<')
 
-      parse_attributes(attributes)
-
       tag = [:html, :tag, tag, attributes]
+
+      case @line
+      when /A({{.*)/
+        # Angular expression
+        tag << [:slim, :text, parse_text_block($1, @orig_line.size - @line.size + $1.size, true)]
+      end
+      parse_attributes(attributes)
 
       @stacks.last << [:static, ' '] if leading_ws
       @stacks.last << tag
@@ -378,10 +383,6 @@ module Slim
           # Splat attribute
           @line = $'
           attributes << [:slim, :splat, parse_ruby_code(delimiter)]
-        when /\A({{.*)/
-          # Angular content
-          @line = $'
-          attributes << [:slim, :text, parse_text_block($1, @orig_line.size - @line.size + $1.size, true)]
         when QUOTED_ATTR_RE
           # Value is quoted (static)
           @line = $'
