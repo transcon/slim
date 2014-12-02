@@ -1,6 +1,5 @@
 # coding: utf-8
 module Slim
-  include Rails
   # Parses Slim code and transforms it to a Temple expression
   # @api private
   class Parser < Temple::Parser
@@ -192,6 +191,11 @@ module Slim
         parse_comment_block
       when /\A([\|'])( ?)/
         # Found a text block.
+        trailing_ws = $1 == "'"
+        @stacks.last << [:slim, :text, parse_text_block($', @indents.last + $2.size + 1)]
+        @stacks.last << [:static, ' '] if trailing_ws
+      when /{{.*}}/
+        # Found an angular expression
         trailing_ws = $1 == "'"
         @stacks.last << [:slim, :text, parse_text_block($', @indents.last + $2.size + 1)]
         @stacks.last << [:static, ' '] if trailing_ws
@@ -407,7 +411,6 @@ module Slim
           else
             # Found something where an attribute should be
             @line.lstrip!
-            Rails.logger.warn @line
             syntax_error!('Expected attribute') unless @line.empty?
 
             # Attributes span multiple lines
