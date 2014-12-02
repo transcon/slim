@@ -316,12 +316,7 @@ module Slim
 
       tag = [:html, :tag, tag, attributes]
 
-      case @line
-      when /A({{.*)/
-        # Angular expression
-        tag << [:slim, :text, parse_text_block($1, @orig_line.size - @line.size + $1.size, true)]
-      end
-      parse_attributes(attributes)
+      parse_attributes(attributes) unless @line.match(/A({{.*)/).present? #check for angular
 
       @stacks.last << [:static, ' '] if leading_ws
       @stacks.last << tag
