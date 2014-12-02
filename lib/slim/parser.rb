@@ -82,10 +82,11 @@ module Slim
 
     protected
 
-    WORD_RE = ''.respond_to?(:encoding) ? '\p{Word}' : '\w'
-    ATTR_NAME = "\\A\\s*(#{WORD_RE}(?:#{WORD_RE}|:|-)*)"
-    QUOTED_ATTR_RE = /#{ATTR_NAME}\s*=(=?)\s*("|')/
-    CODE_ATTR_RE = /#{ATTR_NAME}\s*=(=?)\s*/
+    WORD_RE         = ''.respond_to?(:encoding) ? '\p{Word}' : '\w'
+    ATTR_NAME       = "\\A\\s*(#{WORD_RE}(?:#{WORD_RE}|:|-)*)"
+    QUOTED_ATTR_RE  = /#{ATTR_NAME}\s*=(=?)\s*("|')/
+    CODE_ATTR_RE    = /#{ATTR_NAME}\s*=(=?)\s*/
+    ANGULAR_ATTR_RE = /#{ATTR_NAME}\s*{{.*}}\s*/
 
     def reset(lines = nil, stacks = nil)
       # Since you can indent however you like in Slim, we need to keep a list
@@ -194,9 +195,6 @@ module Slim
         trailing_ws = $1 == "'"
         @stacks.last << [:slim, :text, parse_text_block($', @indents.last + $2.size + 1)]
         @stacks.last << [:static, ' '] if trailing_ws
-      when /\A{{.*}}/
-        # Found an angular expression
-        @stacks.last << [:slim, :text, parse_text_block($', @indents.last + $1.size + 1)]
       when /\A</
         # Inline html
         block = [:multi]
@@ -394,6 +392,10 @@ module Slim
           value = parse_ruby_code(delimiter)
           syntax_error!('Invalid empty attribute') if value.empty?
           attributes << [:html, :attr, name, [:slim, :attrvalue, escape, value]]
+        when ANGULAR_ATTR_RE
+          # Found an angular expression
+          @line = $'
+          @attributes << [:slim, :text, parse_text_block($', @indents.last + $1.size + 1)]
         else
           break unless delimiter
 
