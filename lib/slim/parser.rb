@@ -82,10 +82,10 @@ module Slim
 
     protected
 
-    WORD_RE         = ''.respond_to?(:encoding) ? '\p{Word}' : '\w'
-    ATTR_NAME       = "\\A\\s*(#{WORD_RE}(?:#{WORD_RE}|:|-)*)"
-    QUOTED_ATTR_RE  = /#{ATTR_NAME}\s*=(=?)\s*("|')/
-    CODE_ATTR_RE    = /#{ATTR_NAME}\s*=(=?)\s*/
+    WORD_RE = ''.respond_to?(:encoding) ? '\p{Word}' : '\w'
+    ATTR_NAME = "\\A\\s*(#{WORD_RE}(?:#{WORD_RE}|:|-)*)"
+    QUOTED_ATTR_RE = /#{ATTR_NAME}\s*=(=?)\s*("|')/
+    CODE_ATTR_RE = /#{ATTR_NAME}\s*=(=?)\s*/
 
     def reset(lines = nil, stacks = nil)
       # Since you can indent however you like in Slim, we need to keep a list
@@ -314,9 +314,9 @@ module Slim
       trailing_ws = $&.include?('\'') || $&.include?('>')
       leading_ws = $&.include?('<')
 
-      tag = [:html, :tag, tag, attributes]
-
       parse_attributes(attributes) unless @line.match(/\A(\s*{{.*)/).present? #check for angular
+
+      tag = [:html, :tag, tag, attributes]
 
       @stacks.last << [:static, ' '] if leading_ws
       @stacks.last << tag
