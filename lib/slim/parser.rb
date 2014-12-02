@@ -1,5 +1,6 @@
 # coding: utf-8
 module Slim
+  include 'Rails'
   # Parses Slim code and transforms it to a Temple expression
   # @api private
   class Parser < Temple::Parser
