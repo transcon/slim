@@ -86,7 +86,6 @@ module Slim
     ATTR_NAME       = "\\A\\s*(#{WORD_RE}(?:#{WORD_RE}|:|-)*)"
     QUOTED_ATTR_RE  = /#{ATTR_NAME}\s*=(=?)\s*("|')/
     CODE_ATTR_RE    = /#{ATTR_NAME}\s*=(=?)\s*/
-    ANGULAR_ATTR_RE = /#{ATTR_NAME}\s*{{.*}}\s*/
 
     def reset(lines = nil, stacks = nil)
       # Since you can indent however you like in Slim, we need to keep a list
@@ -357,6 +356,9 @@ module Slim
       when /\A( ?)(.*)\Z/
         # Text content
         tag << [:slim, :text, parse_text_block($2, @orig_line.size - @line.size + $1.size, true)]
+      when /s*{{.*}}s*/
+        # Angular content
+        tag << [:slim, :text, parse_text_block($2, @orig_line.size - @line.size + $1.size, true)]
       end
     end
 
@@ -392,10 +394,6 @@ module Slim
           value = parse_ruby_code(delimiter)
           syntax_error!('Invalid empty attribute') if value.empty?
           attributes << [:html, :attr, name, [:slim, :attrvalue, escape, value]]
-        when ANGULAR_ATTR_RE
-          # Found an angular expression
-          @line = $'
-          @attributes << [:slim, :text, parse_text_block($', @indents.last + $1.size + 1)]
         else
           break unless delimiter
 
