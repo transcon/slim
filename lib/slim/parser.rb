@@ -316,7 +316,7 @@ module Slim
 
       tag = [:html, :tag, tag, attributes]
 
-      parse_attributes(attributes) unless @line.match(/A({{.*)/).present? #check for angular
+      parse_attributes(attributes) unless @line.match(/\A({{.*)/).present? #check for angular
 
       @stacks.last << [:static, ' '] if leading_ws
       @stacks.last << tag
