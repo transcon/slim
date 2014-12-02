@@ -406,6 +406,7 @@ module Slim
           else
             # Found something where an attribute should be
             @line.lstrip!
+            Rails.logger.warn @line
             syntax_error!('Expected attribute') unless @line.empty?
 
             # Attributes span multiple lines
