@@ -196,9 +196,7 @@ module Slim
         @stacks.last << [:static, ' '] if trailing_ws
       when /{{.*}}/
         # Found an angular expression
-        trailing_ws = $1 == "'"
-        @stacks.last << [:slim, :text, parse_text_block($', @indents.last + $2.size + 1)]
-        @stacks.last << [:static, ' '] if trailing_ws
+        @stacks.last << [:slim, :text, parse_text_block($', @indents.last + $1.size + 1)]
       when /\A</
         # Inline html
         block = [:multi]
