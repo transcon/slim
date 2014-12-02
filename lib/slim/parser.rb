@@ -194,7 +194,7 @@ module Slim
         trailing_ws = $1 == "'"
         @stacks.last << [:slim, :text, parse_text_block($', @indents.last + $2.size + 1)]
         @stacks.last << [:static, ' '] if trailing_ws
-      when /{{.*}}/
+      when /\A{{.*}}/
         # Found an angular expression
         @stacks.last << [:slim, :text, parse_text_block($', @indents.last + $1.size + 1)]
       when /\A</
